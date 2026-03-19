@@ -82,9 +82,11 @@ python3 quiz.py
 
 MIT
 
+---
 
 ## 💡grep / awk / find 문제
-### 1. `error_202603.log`에서 `ERROR` 또는 `WARN`을 대소문자 구분 없이 찾기
+### 1. grep 옵션 조합으로 다중 패턴 대소문자 무시 검색
+**문제 1:** `error_202603.log`에서 `ERROR` 또는 `WARN`을 대소문자 구분 없이 찾기
 
 다음 중 올바른 명령어는 무엇인가?
 
@@ -109,7 +111,8 @@ MIT
 ---
 
 
-### 2. `access.log`에서 상태코드가 `500`인 행만 출력
+### 2. awk 조건식으로 특정 상태코드 행 필터링
+**문제 2:** `access.log`에서 상태코드가 `500`인 행만 출력
 
 다음 중 올바른 `awk` 명령어는 무엇인가?
 
@@ -135,7 +138,9 @@ MIT
 
 ---
 
-### 3. 현재 디렉터리 아래에서 .log 파일만 찾아, 그 안에 timeout 문자열이 포함된 줄을 검색하시오.
+### 3. find와 grep을 활용한 로그 파일 검색
+**문제 3:** 현재 디렉터리 아래에서 .log 파일만 찾아, 그 안에 timeout 문자열이 포함된 줄을 검색하시오.
+
 **답:** `find . -name "*.log" -exec grep 'timeout' {} \;`
 
 #### 해설
@@ -150,7 +155,9 @@ MIT
 
 ---
 
-### 4. access.log에서 요청 방식이 POST인 줄의 IP 주소와 요청 경로를 출력하시오.
+### 4. awk로 access.log에서 조건에 맞는 컬럼 추출
+**문제 4:** access.log에서 요청 방식이 POST인 줄의 IP 주소와 요청 경로를 출력하시오.
+
 **답:** `awk '$6=="POST" {print $1, $7}' logs/access.log`
 
 #### 해설
@@ -168,7 +175,9 @@ MIT
 
 ---
 
-### 5번. secure.log에서 로그인 결과가 FAILED이면 사용자명과 "실패"를, 아니면 사용자명과 "성공"을 출력하시오.
+### 5번. awk if-else로 로그인 결과 가공 출력
+**문제 5:** secure.log에서 로그인 결과가 FAILED이면 사용자명과 "실패"를, 아니면 사용자명과 "성공"을 출력하시오.
+
 **답:** `awk '{if($9=="FAILED") print $11, "실패"; else print $11, "성공"}' logs/secure.log`
 
 #### 해설
@@ -190,11 +199,14 @@ MIT
 
 ### 1번: YAML 파일 유효성 검증 및 오류 수정
 
-#### Q.
+**문제 1:**  의도적으로 오류가 포함된 YAML 파일 `/data/docker-compose.yml`이다. 오류 메시지를 확인하고, 오류를 직접 수정한 뒤 다시 검증하라.
 
-* 의도적으로 오류가 포함된 YAML 파일 `practice/data/docker-compose.yml`이다. 오류 메시지를 확인하고, 오류를 직접 수정한 뒤 다시 검증하라.
+**답:**
+    ```bash
+    yq -y '.' /data/docker-compose.yml
+    ```
 
-#### A.
+#### 해설
 
 * **에러 분석**: 에러 메시지의 "line 15, column 6"은 오류가 감지된 위치입니다. 실제 원인은 YAML의 블록 매핑 문법을 파싱할 때 line 4에서 시작된 구조에서 예상한 키가 line 15에서 발견되지 않았다는 의미입니다. 이는 보통 들여쓰기가 규칙과 맞지 않을 때 발생합니다.
 
@@ -206,43 +218,42 @@ MIT
 
     3. 수정 후 다시 검증합니다
 
-    ```bash
-    yq -y '.' practice/data/docker-compose.yml
-    ```
+
 
 ### 2번: 키 값 수정 후 다른 파일로 저장
 
-#### Q.
+**문제 2:** `nc_server` 서비스의 포트를 `4432:443` → `8443:443` 으로 변경하라. 결과를 `/data/custom.yml`로 저장하라.
 
-* `nc_server` 서비스의 포트를 `4432:443` → `8443:443` 으로 변경하라. 결과를 `practice/data/custom.yml`로 저장하라.
+**답:**
+    ```bash
+    yq -y '.services.nc_server.ports = ["8443:443"]' /data/docker-compose.yml > /data/custom.yml
+    ```
 
-#### A.
-
+#### 해설
 * 할당 연산자 `=`를 사용하여 ports 값을 배열 형식 `["8443:443"]`으로 변경합니다. 원본 파일은 수정되지 않고, 결과를 리다이렉트(>)로 새 파일에 저장합니다.
 
-    ```bash
-    yq -y '.services.nc_server.ports = ["8443:443"]' practice/data/docker-compose.yml > practice/data/custom.yml
-    ```
 
 ### 3번: YAML → JSON 변환
 
-#### Q.
+**문제 3:**
 
-* `practice/data/docker-compose.yml` 전체를 JSON 형식으로 변환해야 한다. 변환된 JSON을 `practice/data/docker-compose.json` 파일로 저장하라.
+* `/data/docker-compose.yml` 전체를 JSON 형식으로 변환해야 한다. 변환된 JSON을 `/data/docker-compose.json` 파일로 저장하라.
 
-#### A.
+**답:**
+    ```bash
+    yq '.' /data/docker-compose.yml > /data/docker-compose.json
+    ```
 
+#### 해설
 * `-y` 옵션 없이 기본 출력 형식(JSON)으로 변환하고, 결과를 docker-compose.json 파일로 저장합니다. yq는 기본적으로 JSON으로 출력하기 때문에 이를 파일로 저장하면 JSON 형식의 파일이 됩니다.
 
-    ```bash
-    yq '.' practice/data/docker-compose.yml > practice/data/docker-compose.json
-    ```
+
 
 ### 4번: YAML 특정 환경변수 항목 삭제
 
-#### Q.
+**문제 4:**
 
-* `practice/data/docker-compose.json` 파일의 `nc_mariadb` 서비스에는 아래와 같은 환경변수들이 정의되어 있다.
+* `/data/docker-compose.json` 파일의 `nc_mariadb` 서비스에는 아래와 같은 환경변수들이 정의되어 있다.
 
     ```
     environment:
@@ -257,30 +268,37 @@ MIT
 
 * 보안 정책에 따라 `MYSQL_ROOT_PASSWORD` 항목을 환경변수 목록에서 제거하시오.
 
-#### A.
+**답:**
+    ```bash
+    jq 'del(.services.nc_mariadb.environment[3])' /data/docker-compose.json > /data/tmp.json
+    mv /data/tmp.json /data/docker-compose.json
+    ```
 
+#### 해설
 * `del()` 함수를 사용하여 `MYSQL_ROOT_PASSWORD` 항목이 포함된 배열 요소를 삭제합니다. 배열 요소는 0부터 시작하는 인덱스로 접근하므로, `MYSQL_ROOT_PASSWORD`가 4번째 요소라면 인덱스는 3입니다. 결과를 임시 파일로 저장한 후 원본 파일로 덮어씁니다.
 
-    ```bash
-    jq 'del(.services.nc_mariadb.environment[3])' practice/data/docker-compose.json > practice/data/tmp.json && mv practice/data/tmp.json practice/data/docker-compose.json
-    ```
+
 
 ### 5번: JSON 배열에 환경변수 항목 추가
 
-#### Q.
+**문제 5:**
 
-* `practice/data/docker-compose.json` 파일의 `nc_redis` 서비스의 `environment` 배열에 `- UMASK=022` 항목을 추가하려고 한다. 올바른 명령어를 고르시오.
+* `/data/docker-compose.json` 파일의 `nc_redis` 서비스의 `environment` 배열에 `- UMASK=022` 항목을 추가하려고 한다. 올바른 명령어를 고르시오.
 
-    1. `jq 'del(.services.nc_redis.environment[] | "UMASK=022")' practice/data/docker-compose.json` 
+    1. `jq 'del(.services.nc_redis.environment[] | "UMASK=022")' /data/docker-compose.json` 
 
-    2. `jq 'add(.services.nc_redis.environment, "UMASK=022")' practice/data/docker-compose.json`
+    2. `jq 'add(.services.nc_redis.environment, "UMASK=022")' /data/docker-compose.json`
 
-    3. `jq '.services.nc_redis.environment += ["UMASK=022"]' practice/data/docker-compose.json`
+    3. `jq '.services.nc_redis.environment += ["UMASK=022"]' /data/docker-compose.json`
 
-    4. `jq '.services.nc_redis.environment[4] | "UMASK=022"' practice/data/docker-compose.json`
+    4. `jq '.services.nc_redis.environment[4] | "UMASK=022"' /data/docker-compose.json`
 
-#### A.
+**답:**
+3
 
+`jq '.services.nc_redis.environment += ["UMASK=022"]' /data/docker-compose.json`
+
+#### 해설
 | 보기 | 설명 | 평가 |
 | --- | --- | --- |
 | 1. | `del()`은 배열 요소를 **삭제**하는 함수로, 추가와는 관계 없음 | ❌ |
