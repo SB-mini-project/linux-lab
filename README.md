@@ -3,6 +3,16 @@ Linux 명령어 실습 퀴즈 CLI 프로그램
 
 <br>
 
+
+## 🧑‍💻 팀원 소개
+
+
+| ![](https://avatars.githubusercontent.com/u/70837945?v=4) | ![](https://avatars.githubusercontent.com/u/74810689?v=4) | ![](https://avatars.githubusercontent.com/u/125464850?v=4) |![](https://avatars.githubusercontent.com/u/89902255?v=4)|![](https://avatars.githubusercontent.com/u/215618778?v=4)|
+|:---:|:---:|:---:|:---:|:---:|
+| **심규보**<br>[@Qbooo](https://github.com/Qbooo) | **최승민**<br>[@Kumin-91](https://github.com/Kumin-91) | **이유진**<br>[@janie71](https://github.com/janie71) | **유예원**<br>[@Yewon0106](https://github.com/Yewon0106) | **서주영**<br>[@youngz1](https://github.com/young2z1) |
+
+<br/>
+
 ## 📌 Overview
 신입사원이 리눅스 환경에서 자주 사용하는 `find`, `grep`, `awk` 명령어를 실제 로그/데이터 파일을 기반으로 학습할 수 있도록 구성된 실습 자료
 
