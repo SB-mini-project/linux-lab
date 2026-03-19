@@ -1,0 +1,16 @@
+2026-03-01 ERROR DB connection failed
+2026-03-01 WARN Disk usage high
+2026-03-02 ERROR Null pointer exception
+2026-03-03 INFO System rebooted
+2026-03-04 INFO Daily backup completed
+2026-03-04 WARN CPU usage high
+2026-03-05 ERROR API timeout on /reports
+2026-03-05 WARN Memory usage above threshold
+2026-03-06 INFO User sync completed
+2026-03-06 ERROR Failed to write audit log
+2026-03-07 INFO Log rotation completed
+2026-03-07 WARN SSL certificate expires soon
+2026-03-08 ERROR Payment service unavailable
+2026-03-09 WARN Too many login attempts
+2026-03-09 ERROR Cache server not reachable
+2026-03-10 INFO Maintenance mode disabled

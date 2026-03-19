@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+practice/data/docker-compose.json
+practice/data/custom.yml
+practice/data/tmp.json

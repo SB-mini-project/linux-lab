@@ -1,0 +1,10 @@
+web01	10.0.0.1	Seoul-DC-A
+web02	10.0.0.4	Seoul-DC-B
+db01	10.0.0.2	Busan-DC-A
+db02	10.0.0.5	Busan-DC-B
+app01	10.0.0.3	Seoul-DC-A
+app02	10.0.0.6	Seoul-DC-B
+cache01	10.0.0.7	Incheon-DC-A
+batch01	10.0.0.8	Daejeon-DC-A
+backup01	10.0.0.9	Daegu-DC-A
+proxy01	10.0.0.10	Seoul-DC-A

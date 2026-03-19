@@ -1,0 +1,74 @@
+services:
+  #nextcloud
+  nc_server:
+    image: linuxserver/nextcloud:amd64-latest
+    container_name: nc_server
+    restart: unless-stopped
+    ports:
+      - 4432:443
+    volumes:
+      - /zfs/nextcloud/config:/config
+      - /zfs/nextcloud/data:/data
+      - /zfs/storage/Drive:/drive
+    environment:
+      - PUID=${OPR_UID}
+      - PGID=${OPR_GID}
+    - TZ=UTC
+      - DOCKER_MODS=linuxserver/mods:nextcloud-notify-push
+    labels:
+      - "d2n.enabled=true"
+      - "d2n.database=Docker"
+    depends_on:
+      - nc_mariadb
+      - nc_redis
+  #mariadb
+  nc_mariadb:
+    image: linuxserver/mariadb:amd64-latest
+    container_name: nc_mariadb
+    restart: unless-stopped
+    volumes:
+      - /docker/nextcloud_mariadb/config:/config
+    environment:
+      - PUID=${OPR_UID}
+      - PGID=${OPR_GID}
+      - TZ=UTC
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+    labels:
+      - "d2n.enabled=true"
+      - "d2n.database=Docker"
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+  #redis
+  nc_redis:
+    image: docker.io/redis:latest
+    container_name: nc_redis
+    restart: unless-stopped
+    volumes:
+      - /docker/nextcloud_redis/data:/data
+    environment:
+      - UID=${OPR_UID}
+      - GID=${OPR_GID}
+      - TZ=UTC
+      - REDIS_PASSWORD=${DB_PASSWORD}
+    labels:
+      - "d2n.enabled=true"
+      - "d2n.database=Docker"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+  #imaginary
+  nc_imaginary:
+    image: nextcloud/aio-imaginary:latest
+    container_name: nc_imaginary
+    restart: unless-stopped
+    labels:
+      - "d2n.enabled=true"
+      - "d2n.database=Docker"
