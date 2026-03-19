@@ -12,8 +12,8 @@ services:
       - /zfs/storage/Drive:/drive
     environment:
       - PUID=${OPR_UID}
-      - PGID=${OPR_GID}
-    - TZ=UTC
+    - PGID=${OPR_GID}
+      - TZ=UTC
       - DOCKER_MODS=linuxserver/mods:nextcloud-notify-push
     labels:
       - "d2n.enabled=true"
@@ -40,7 +40,7 @@ services:
       - "d2n.enabled=true"
       - "d2n.database=Docker"
     healthcheck:
-      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost"]
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-u", "root", "--password=$${DB_PASSWORD}"]
       interval: 30s
       timeout: 5s
       retries: 5
@@ -49,6 +49,7 @@ services:
     image: docker.io/redis:latest
     container_name: nc_redis
     restart: unless-stopped
+    user: ${OPR_UID}:${OPR_GID}
     volumes:
       - /docker/nextcloud_redis/data:/data
     environment:
@@ -59,6 +60,7 @@ services:
     labels:
       - "d2n.enabled=true"
       - "d2n.database=Docker"
+    command: ['/bin/sh', '-c', 'redis-server --appendonly yes --requirepass $${REDIS_PASSWORD}']
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 30s
@@ -68,6 +70,14 @@ services:
   nc_imaginary:
     image: nextcloud/aio-imaginary:latest
     container_name: nc_imaginary
+    command: >
+      -enable-url-source
+      -p 9000
+      -concurrency 18
+      -http-read-timeout 60
+      -http-write-timeout 60
+      -max-allowed-resolution 50
+      -cpus 6
     restart: unless-stopped
     labels:
       - "d2n.enabled=true"
